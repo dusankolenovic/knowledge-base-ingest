@@ -1,0 +1,53 @@
+{
+  "skill_name": "blogpost-knowledge-ingest",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "Add this to my AI knowledge base: https://www.anthropic.com/engineering/building-effective-agents",
+      "expected_output": "Anchor row + granular child rows with paragraph-level deep links, correct closed-vocabulary tags, reconciled against existing DB rows, row titles that are not the article's headings",
+      "files": [],
+      "assertions": [
+        "Exactly one anchor row is proposed, its Title ends with '(anchor)', and its 'Part of' is empty",
+        "Anchor body contains a '## The argument' narrative, a '## Segment map' table, and an '## About this source' block",
+        "The anchor's source block records a Retrieved date and the source's standing (independent / vendor / practitioner)",
+        "Every non-anchor row sets 'Part of' to the anchor row",
+        "Every 'Type' value is one of the 7 allowed: Concept, Framework, Use case, Skill, Playbook, Tool, Template",
+        "Every 'Theme' value is one of the 8 allowed options, with exact casing and ampersands - no invented options",
+        "Every 'Domain' value is one of the 8 allowed, and every 'Lens' value is one of Business/Technology/Adoption",
+        "Every non-anchor row body contains at least one deep link of the form <canonical-url>#:~:text=... or <canonical-url>#<heading-id>, paired with a P<n> block ordinal",
+        "'Source' on every row is the canonical article URL with no fragment and no utm_/ref tracking parameters",
+        "Every row has a Summary between roughly 150 and 1100 characters",
+        "Row titles are not a one-to-one restatement of the article's own headings, and none is a generic outline label (Introduction, Overview, Conclusion, Common patterns, Summary)",
+        "Blockquoted article text is under 50% of each body's characters - synthesis dominates, not quotes - and no single quote exceeds roughly three sentences",
+        "At least a third of proposed rows cross-link to another row via <mention-page url=...>",
+        "A dedupe check ran before any writing, using both a Source LIKE probe and a semantic notion-search, and its result is reported"
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "can you pull the frameworks and lessons out of this post and file them properly - https://martinfowler.com/articles/2025-nature-abstraction.html",
+      "expected_output": "Same ingest pipeline triggered without the words 'knowledge base'; a short essay yields few units, not one per paragraph",
+      "files": [],
+      "assertions": [
+        "The skill triggers and writes to the AI Knowledge Base rather than answering with a chat summary",
+        "The proposed unit count is proportionate to a short opinion essay (roughly 2-5 units plus the anchor), not one row per section or paragraph",
+        "The spine written in Step 2 is stated before any candidate extraction begins",
+        "Every candidate receives an explicit NEW / ENHANCE / SKIP verdict against existing rows, with SKIPs recorded in the segment map rather than dropped silently",
+        "Rows relaying an idea the post attributes to someone else are not filed as this author's contribution",
+        "Batch reports are printed as rows are written, not only a single report at the end"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "ingest https://example.com/paywalled-article into the knowledge base",
+      "expected_output": "Graceful failure: the fetch problem is reported and options offered; nothing is written and nothing is invented",
+      "files": [],
+      "assertions": [
+        "No rows are created when the fetch fails or the body is detected as truncated/paywalled/client-rendered",
+        "The failure mode is named specifically (HTTP status, paywall suspected, or JS shell) rather than reported as a generic error",
+        "Concrete alternatives are offered: browser tools, the publisher's RSS feed, or a pasted copy",
+        "The article's content is not reconstructed or guessed from its title, URL slug, or meta description"
+      ]
+    }
+  ]
+}

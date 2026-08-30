@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+article-*.json
+article-*.md
+transcript-*.json
+transcript-*.md
+.DS_Store

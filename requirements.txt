@@ -1,0 +1,17 @@
+# Python dependencies for the PDF path of blogpost-knowledge-ingest.
+#
+# HTML ingestion needs NOTHING beyond the Python standard library.
+# PDF ingestion needs at least ONE text extractor. The script auto-detects
+# whichever of these is installed and picks the cleanest output by score,
+# so pypdf alone is enough to run every test we ran.
+#
+# Required (pure-Python, no system libraries, works everywhere):
+pypdf>=4.0
+
+# Optional — improves extraction on some PDFs; the script uses it if present:
+# pymupdf>=1.24
+#
+# Optional — the `pdftotext` binary (from poppler) is also auto-detected if on
+# PATH. Not a pip package; install via your OS package manager if you want it:
+#   macOS:         brew install poppler
+#   Debian/Ubuntu: apt-get install poppler-utils
